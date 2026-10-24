@@ -1,28 +1,25 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex flex-col flex-1 items-center bg-zinc-50 font-sans dark:bg-black">
       <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">
         ReLearn
       </h1>
-      <p className="mt-2 text-lg text-zinc-700 dark:text-zinc-400">
-        Restart from scratch and learn everything again.
-      </p>
-      <div className="mt-6 flex gap-4">
-        <a
-          href="/learn"
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+      <div className="mt-10 mr-20 w-full flex justify-end">
+        <Link 
+          href="/folio" 
+          className="rounded-md bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600"
         >
-          Start Learning
-        </a>
-        <a
-          href="/about"
-          className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-        >
-          About
-        </a>
+          Folio
+        </Link>
       </div>
     </div>
   );
+  /*
+  tu pars d'un problème à résoudre, tu découvres les connaissances dont tu as besoin, tu les étudies au moment où elles deviennent utiles, puis tu construis une solution.
+  Le projet donne envie d'apprendre, le problème fait émerger le besoin, la fiche apporte les connaissances et l'implémentation permet de les maîtriser.
+  
+  */
 }
