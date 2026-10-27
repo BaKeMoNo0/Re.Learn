@@ -2,22 +2,18 @@
 
 import { useRef, useState } from "react";
 import Toolbar from "./features/toolbar/Toolbar";
-import { type Format } from "./features/sheet-format/formats";
 import FullscreenButton from "./components/FullscreenButton";
-import Sheet from "./features/sheet/Sheet";
 import Zoom from "./features/zoom/Zoom";
 import DraggableToolbar from "./features/toolbar/DraggableToolbar";
 import Resizable from "./features/selection/Resizable";
+import SheetEditor from "./features/sheet/SheetEditor";
 
 
 export default function Folio() {
     
     const containerRef = useRef<HTMLDivElement>(null);
     
-    const [format, setFormat] = useState<Format>("A6");
-    
     const [zoom, setZoom] = useState(100);
-
     const [isToolbarSelected, setIsToolbarSelected] = useState(false);
     
     const [toolbarSize, setToolbarSize] = useState({
@@ -37,21 +33,28 @@ export default function Folio() {
         >
             <Zoom zoom={zoom} onZoomChange={setZoom} />
             
-            {/* Toolbar */}
-            <DraggableToolbar>
-                <Resizable
-                    width={toolbarSize.width}
-                    height={toolbarSize.height}
-                    isSelected={isToolbarSelected}
-                    onSelect={() => setIsToolbarSelected(true)}
-                    onResize={setToolbarSize}
-                >   
-                    <Toolbar format={format} onFormatChange={setFormat} />
-                </Resizable>
-            </DraggableToolbar>
+           
+            <SheetEditor
+                zoom={zoom}
+                initialFormat="A6"
+                renderFormatTool={(format, onFormatChange) => (
+                    <DraggableToolbar>
+                        <Resizable
+                            width={toolbarSize.width}
+                            height={toolbarSize.height}
+                            isSelected={isToolbarSelected}
+                            onSelect={() => setIsToolbarSelected(true)}
+                            onResize={setToolbarSize}
+                        >
+                            <Toolbar
+                                format={format}
+                                onFormatChange={onFormatChange}
+                            />
+                        </Resizable>
+                    </DraggableToolbar>
+                )}
+            />
 
-            {/* Sheet */}
-            <Sheet format={format} zoom={zoom} />
 
             <FullscreenButton containerRef={containerRef} />
         </div>
