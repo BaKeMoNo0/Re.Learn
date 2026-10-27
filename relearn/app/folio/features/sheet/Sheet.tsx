@@ -1,6 +1,6 @@
 "use client";
 
-import { formats } from "./Toolbar/formats";
+import { formats } from "../sheet-format/formats";
 
 type SheetProps = {
     format: keyof typeof formats;

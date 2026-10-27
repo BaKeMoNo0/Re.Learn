@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { formats, type Format } from "./formats";
-import FormatTool from "./FormatTool";
+import { formats, type Format } from "../sheet-format/formats";
+import FormatTool from "../sheet-format/FormatTool";
 
 type ToolbarProps = {
     format: Format;
