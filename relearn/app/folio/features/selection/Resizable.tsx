@@ -161,7 +161,7 @@ export default function Resizable({
             }}
             className={`relative box-border ${
                 isSelected
-                    ? "z-10 outline outline-1 outline-[#777b5b]"
+                    ? "z-10 outline-1 outline-[#777b5b]"
                     : ""
             }`}
         >

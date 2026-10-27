@@ -1,13 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Toolbar from "./components/Toolbar/Toolbar";
-import { type Format } from "./components/Toolbar/formats";
+import Toolbar from "./features/toolbar/Toolbar";
+import { type Format } from "./features/sheet-format/formats";
 import FullscreenButton from "./components/FullscreenButton";
-import Sheet from "./components/Sheet";
-import Zoom from "./components/Zoom";
-import DraggableToolbar from "./components/Toolbar/DraggableToolbar";
-import Resizable from "./components/Resizable";
+import Sheet from "./features/sheet/Sheet";
+import Zoom from "./features/zoom/Zoom";
+import DraggableToolbar from "./features/toolbar/DraggableToolbar";
+import Resizable from "./features/selection/Resizable";
 
 
 export default function Folio() {
