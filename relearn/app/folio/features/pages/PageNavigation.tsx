@@ -53,7 +53,7 @@ export default function PageNavigation({
 
     
     return (
-        <div className="flex w-full max-w-[397px] items-center justify-between px-2 text-[#777b5b]">
+        <div className="flex w-full max-w-99.25 items-center justify-between px-2 text-[#777b5b]">
             <button
                 type="button"
                 onClick={onPrevious}

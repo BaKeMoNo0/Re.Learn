@@ -44,7 +44,7 @@ export default function Folio() {
     return (
         <div 
             ref={containerRef} 
-            className="min-h-0 flex-1 overflow-auto flex flex-col items-center justify-center gap-4 bg-[#ffffe3] text-[#454536] font-sans p-4"
+            className="min-h-0 flex-1 overflow-auto flex flex-col items-center justify-start gap-4 bg-[#ffffe3] text-[#454536] font-sans p-4"
             onPointerDown={(event) => {
                 if (event.target === event.currentTarget) {
                     setIsToolbarSelected(false);
@@ -52,39 +52,41 @@ export default function Folio() {
             }}
         >
             <Zoom zoom={zoom} onZoomChange={setZoom} />
-            
-            {activePage && (
-                <SheetEditor
-                    key={activePage.id}
-                    zoom={zoom}
-                    page={activePage}
-                    onPageChange={handlePageChange}
-                    renderFormatTool={(format, onFormatChange) => (
-                        <DraggableToolbar>
-                            <Resizable
-                                width={toolbarSize.width}
-                                height={toolbarSize.height}
-                                isSelected={isToolbarSelected}
-                                onSelect={() => setIsToolbarSelected(true)}
-                                onResize={setToolbarSize}
-                            >
-                                <Toolbar
-                                    format={format}
-                                    onFormatChange={onFormatChange}
-                                />
-                            </Resizable>
-                        </DraggableToolbar>
-                    )}
-                />
-            )}
 
-            <PageNavigation
-                currentPage={activePageIndex}
-                totalPages={pages.length}
-                onPrevious={goToPreviousPage}
-                onNext={goToNextPage}
-                onCreate={createPage}
-            />
+            <div className="my-auto flex w-full flex-col items-center gap-4 shrink-0">
+                {activePage && (
+                    <SheetEditor
+                        key={activePage.id}
+                        zoom={zoom}
+                        page={activePage}
+                        onPageChange={handlePageChange}
+                        renderFormatTool={(format, onFormatChange) => (
+                            <DraggableToolbar>
+                                <Resizable
+                                    width={toolbarSize.width}
+                                    height={toolbarSize.height}
+                                    isSelected={isToolbarSelected}
+                                    onSelect={() => setIsToolbarSelected(true)}
+                                    onResize={setToolbarSize}
+                                >
+                                    <Toolbar
+                                        format={format}
+                                        onFormatChange={onFormatChange}
+                                    />
+                                </Resizable>
+                            </DraggableToolbar>
+                        )}
+                    />
+                )}
+
+                <PageNavigation
+                    currentPage={activePageIndex}
+                    totalPages={pages.length}
+                    onPrevious={goToPreviousPage}
+                    onNext={goToNextPage}
+                    onCreate={createPage}
+                />
+            </div>
 
             <FullscreenButton containerRef={containerRef} />
         </div>
