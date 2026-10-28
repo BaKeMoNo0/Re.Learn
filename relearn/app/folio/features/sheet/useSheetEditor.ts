@@ -8,10 +8,11 @@ import type { SheetFormat } from "./sheet.types";
 //Gérer le contenu, le format et l'état de correction
 
 export function useSheetEditor(
-    initialFormat: SheetFormat = "A4"
+    initialFormat: SheetFormat = "A4",
+    initialContent = ""
 ) {
     const [format, setFormat] = useState<SheetFormat>(initialFormat);
-    const [content, setContent] = useState("");
+    const [content, setContent] = useState(initialContent);
     const [pendingFormat, setPendingFormat] =
         useState<SheetFormat | null>(null);
     const [previewFormat, setPreviewFormat] =
