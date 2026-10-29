@@ -1,5 +1,5 @@
 
-import type { formats } from "../sheet-format/formats";
+import type { formats } from "../toolbar/format/formats";
 
 export type SheetFormat = keyof typeof formats;
 

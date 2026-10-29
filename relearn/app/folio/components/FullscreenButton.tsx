@@ -56,7 +56,7 @@ export default function FullscreenButton({ containerRef }: FullscreenButtonProps
                     ? "Quitter le plein écran"
                     : "Passer en plein écran"
             }
-            className="fixed bottom-4 right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-[#d8d9b8] text-[#454536] shadow-md transition-colors hover:bg-[#c6c9a0]"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#d5d5b5] bg-[#ffffe3] text-lg shadow-lg hover:bg-[#eeeed7]"
         >
             {isFullscreen ? "↙" : "↗"}
         </button>

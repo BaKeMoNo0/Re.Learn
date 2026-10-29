@@ -1,6 +1,6 @@
 "use client";
 
-import { formats } from "../sheet-format/formats";
+import { formats } from "../toolbar/format/formats";
 import type { SheetFormat } from "./sheet.types";
 
 type SheetProps = {

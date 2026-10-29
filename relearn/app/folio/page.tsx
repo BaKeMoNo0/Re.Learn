@@ -1,15 +1,13 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import Toolbar from "./features/toolbar/Toolbar";
 import FullscreenButton from "./components/FullscreenButton";
 import Zoom from "./features/zoom/Zoom";
-import DraggableToolbar from "./features/toolbar/DraggableToolbar";
-import Resizable from "./features/selection/Resizable";
 import SheetEditor from "./features/sheet/SheetEditor";
 import usePages from "./features/pages/usePages";
 import type { Page } from "./features/pages/page.types";
 import PageNavigation from "./features/pages/PageNavigation";
+import ToolbarManager from "./features/toolbar/ToolbarManager";
 
 
 export default function Folio() {
@@ -18,11 +16,6 @@ export default function Folio() {
     
     const [zoom, setZoom] = useState(100);
     const [isToolbarSelected, setIsToolbarSelected] = useState(false);
-    
-    const [toolbarSize, setToolbarSize] = useState({
-        width: 180,
-        height: 56,
-    });
 
     const {
         pages,
@@ -40,6 +33,9 @@ export default function Folio() {
         },
         [updatePage]
     );
+
+    const controlsRef = useRef<HTMLDivElement>(null);
+    const [controlsContainer, setControlsContainer] = useState<HTMLDivElement | null>(null);
 
     return (
         <div 
@@ -61,20 +57,11 @@ export default function Folio() {
                         page={activePage}
                         onPageChange={handlePageChange}
                         renderFormatTool={(format, onFormatChange) => (
-                            <DraggableToolbar>
-                                <Resizable
-                                    width={toolbarSize.width}
-                                    height={toolbarSize.height}
-                                    isSelected={isToolbarSelected}
-                                    onSelect={() => setIsToolbarSelected(true)}
-                                    onResize={setToolbarSize}
-                                >
-                                    <Toolbar
-                                        format={format}
-                                        onFormatChange={onFormatChange}
-                                    />
-                                </Resizable>
-                            </DraggableToolbar>
+                            <ToolbarManager
+                                format={format}
+                                onFormatChange={onFormatChange}
+                                controlsContainer={controlsContainer}
+                            />
                         )}
                     />
                 )}
@@ -88,7 +75,15 @@ export default function Folio() {
                 />
             </div>
 
-            <FullscreenButton containerRef={containerRef} />
+            <div 
+                ref={(node) => {
+                    controlsRef.current = node;
+                    setControlsContainer(node);
+                }}
+                className="fixed bottom-4 right-4 z-50 flex items-center gap-2"
+            >
+                <FullscreenButton containerRef={containerRef} />
+            </div>
         </div>
     );
 }
