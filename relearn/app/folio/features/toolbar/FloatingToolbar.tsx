@@ -140,7 +140,8 @@ export default function FloatingToolbar({
                             </button>
                             {children}
                         </>
-                    )} :
+                    )}
+                    
                     {!isRight && (
                         <>
                             {children}

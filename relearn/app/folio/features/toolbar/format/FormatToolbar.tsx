@@ -1,6 +1,6 @@
 "use client";
 
-import { formats, type Format } from "./formats";
+import { type Format } from "./formats";
 import FormatTool from "./FormatTool";
 
 type ToolbarProps = {

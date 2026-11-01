@@ -11,8 +11,6 @@ type SheetProps = {
     onContentChange: (content: string) => void;
 };
 
-const SHEET_INSET = 42;
-
 export default function Sheet({ format, zoom, content, previewFormat, onContentChange }: SheetProps) {
 
     const currentFormat = formats[format];

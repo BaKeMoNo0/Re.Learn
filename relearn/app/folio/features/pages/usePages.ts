@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Page } from "./page.types";
 import type { SheetFormat } from "../sheet/sheet.types";
+import { defaultAppearance } from "../toolbar/appearance/appearance.defaults";
 
 export default function usePages(
     initialFormat: SheetFormat
@@ -16,6 +17,7 @@ export default function usePages(
             title: "Page 1",
             content: "",
             format: initialFormat,
+            appearance: defaultAppearance,
         };
 
         setPages([firstPage]);
@@ -36,6 +38,7 @@ export default function usePages(
             title: `Page ${pages.length + 1}`,
             content: "",
             format: activePage.format,
+            appearance: structuredClone(defaultAppearance),
         };
 
         setPages((currentPages) => [...currentPages, newPage]);

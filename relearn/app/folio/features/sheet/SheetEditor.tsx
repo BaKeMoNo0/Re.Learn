@@ -31,6 +31,7 @@ export default function SheetEditor({zoom, page, onPageChange, renderFormatTool}
     }, [
         page.id,
         page.title,
+        page.appearance,
         editor.format,
         editor.content,
         onPageChange,

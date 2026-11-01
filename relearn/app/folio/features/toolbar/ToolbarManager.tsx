@@ -5,24 +5,28 @@ import { useState } from "react";
 import FloatingToolbar from "./FloatingToolbar";
 import FormatToolbar from "./format/FormatToolbar";
 import type { Format } from "./format/formats";
-import FocusButton from "../../components/FocusButton";
 import { createPortal } from "react-dom";
-import type { RefObject } from "react";
+import type { Appearance } from "./appearance/appearance.types";
+import GlobalToolbar from "./appearance/GlobalToolbar";
 
 type ToolbarManagerProps = {
     format: Format;
     onFormatChange: (format: Format) => void;
     controlsContainer: HTMLDivElement | null;
+    appearance: Appearance;
+    onAppearanceChange: (appearance: Appearance) => void;
 };
 
 export default function ToolbarManager({
     format,
     onFormatChange,
     controlsContainer,
+    appearance,
+    onAppearanceChange,
 }: ToolbarManagerProps) {
+
     const [toolbarResetKey, setToolbarResetKey] = useState(0);
     const [visible, setVisible] = useState(true);
-    const [showToolbars, setShowToolbars] = useState(true);
 
     const resetToolbarPositions = () => {
         setToolbarResetKey((key) => key + 1);
@@ -30,6 +34,20 @@ export default function ToolbarManager({
 
     return (
         <>
+            <FloatingToolbar
+                icon="🎨"
+                label="Personnalisation"
+                side="left"
+                initialTop={140}
+                resetKey={toolbarResetKey}
+                visible={visible}
+            >
+                <GlobalToolbar
+                    appearance={appearance}
+                    onAppearanceChange={onAppearanceChange}
+                />
+            </FloatingToolbar>
+
             {/* Format de la feuille */}
             <FloatingToolbar
                 icon="📐"
@@ -44,6 +62,10 @@ export default function ToolbarManager({
                     onFormatChange={onFormatChange}
                 />
             </FloatingToolbar>
+
+
+
+
 
             {/* Commandes globales des toolbars */}
             {controlsContainer &&

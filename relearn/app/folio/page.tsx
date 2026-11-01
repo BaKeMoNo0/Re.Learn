@@ -8,6 +8,7 @@ import usePages from "./features/pages/usePages";
 import type { Page } from "./features/pages/page.types";
 import PageNavigation from "./features/pages/PageNavigation";
 import ToolbarManager from "./features/toolbar/ToolbarManager";
+import { Appearance } from "./features/toolbar/appearance/appearance.types";
 
 
 export default function Folio() {
@@ -32,6 +33,18 @@ export default function Folio() {
             updatePage(updatedPage);
         },
         [updatePage]
+    );
+
+    const handleAppearanceChange = useCallback(
+        (newAppearance: Appearance) => {
+            if (!activePage) return;
+
+            updatePage({
+                ...activePage,
+                appearance: newAppearance,
+            });
+        },
+        [activePage, updatePage]
     );
 
     const controlsRef = useRef<HTMLDivElement>(null);
@@ -61,6 +74,8 @@ export default function Folio() {
                                 format={format}
                                 onFormatChange={onFormatChange}
                                 controlsContainer={controlsContainer}
+                                appearance={activePage.appearance}
+                                onAppearanceChange={handleAppearanceChange}
                             />
                         )}
                     />
