@@ -1,24 +1,46 @@
-import type { Appearance } from "./appearance.types";
+import type {
+    Appearance,
+    ColorStyle,
+    TypographyStyle,
+    LayoutStyle
+} from "./appearance.types";
 
-export const defaultAppearance: Appearance = {
+
+export const defaultColors: ColorStyle = {
+    color: "#454536",
     background: {
         type: "color",
         color: "#ffffe3",
         image: null,
-        opacity: 100,
+        opacity: 1,
         size: "cover",
     },
+    borderColor: "#a7a78a",
+};
 
-    buttons: {
-        backgroundColor: "#ffffe3",
-        textColor: "#454536",
-        borderColor: "#d5d5b5",
-        borderRadius: 12,
-    },
+export const defaultTypography: TypographyStyle = {
+    fontFamily: "Arial",
+    fontSize: 16,
+    fontWeight: 400,
+    fontStyle: "normal",
+    lineHeight: 1.5,
+    textAlign: "left",
+    textDecorationLine: "none",
+    textDecorationStyle: "solid",
+    textDecorationColor: "#454536",
+    letterSpacing: 0,
+};
 
-    typography: {
-        fontFamily: "Arial",
-        color: "#454536",
-        fontSize: 16,
-    },
+export const defaultLayout: LayoutStyle = {
+    width: 0,
+    height: 0,
+    padding: 0,
+    margin: 0,
+    borderRadius: 12,
+};
+
+export const defaultAppearance: Appearance = {
+    colors: defaultColors,
+    typography: defaultTypography,
+    layout: defaultLayout,
 };

@@ -1,6 +1,6 @@
 
-import { formats } from "../toolbar/format/formats";
-import type { SheetFormat } from "./sheet.types";
+import { formats } from "./formats";
+import type { SheetFormat } from "../sheet/formats";
 
 // Mesurer le texte et déterminer ce qui tient dans une page
 

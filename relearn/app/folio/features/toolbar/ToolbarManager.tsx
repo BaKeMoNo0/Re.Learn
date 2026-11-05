@@ -2,24 +2,24 @@
 "use client";
 
 import { useState } from "react";
-import FloatingToolbar from "./FloatingToolbar";
-import FormatToolbar from "./format/FormatToolbar";
-import type { Format } from "./format/formats";
 import { createPortal } from "react-dom";
+
+import FloatingToolbar from "./FloatingToolbar";
+
+import ColorToolbar from "./appearance/colors/ColorToolbar";
+import TypographyToolbar from "./appearance/typography/TypographyToolbar";
+import LayoutToolbar from "./appearance/layout/LayoutToolbar";
+
 import type { Appearance } from "./appearance/appearance.types";
-import GlobalToolbar from "./appearance/GlobalToolbar";
 
 type ToolbarManagerProps = {
-    format: Format;
-    onFormatChange: (format: Format) => void;
     controlsContainer: HTMLDivElement | null;
+    
     appearance: Appearance;
     onAppearanceChange: (appearance: Appearance) => void;
 };
 
 export default function ToolbarManager({
-    format,
-    onFormatChange,
     controlsContainer,
     appearance,
     onAppearanceChange,
@@ -32,38 +32,75 @@ export default function ToolbarManager({
         setToolbarResetKey((key) => key + 1);
     };
 
+    const updateColors = (colors: Appearance["colors"]) => {
+        onAppearanceChange({
+            ...appearance,
+            colors,
+        });
+    };
+
+    const updateTypography = (
+        typography: Appearance["typography"]
+    ) => {
+        onAppearanceChange({
+            ...appearance,
+            typography,
+        });
+    };
+
+    const updateLayout = (layout: Appearance["layout"]) => {
+        onAppearanceChange({
+            ...appearance,
+            layout,
+        });
+    };
+
     return (
         <>
+            {/* Couleurs */}
             <FloatingToolbar
                 icon="🎨"
-                label="Personnalisation"
+                label="Couleurs"
                 side="left"
                 initialTop={140}
                 resetKey={toolbarResetKey}
                 visible={visible}
             >
-                <GlobalToolbar
-                    appearance={appearance}
-                    onAppearanceChange={onAppearanceChange}
+                <ColorToolbar
+                    colors={appearance.colors}
+                    onChange={updateColors}
                 />
             </FloatingToolbar>
 
-            {/* Format de la feuille */}
+            {/* Typographie */}
             <FloatingToolbar
-                icon="📐"
-                label="Format de la feuille"
+                icon="🔤"
+                label="Typographie"
                 side="left"
-                initialTop={80}
+                initialTop={200}
                 resetKey={toolbarResetKey}
                 visible={visible}
             >
-                <FormatToolbar
-                    format={format}
-                    onFormatChange={onFormatChange}
+                <TypographyToolbar
+                    typography={appearance.typography}
+                    onChange={updateTypography}
                 />
             </FloatingToolbar>
 
-
+            {/* Disposition */}
+            <FloatingToolbar
+                icon="📏"
+                label="Disposition"
+                side="left"
+                initialTop={260}
+                resetKey={toolbarResetKey}
+                visible={visible}
+            >
+                <LayoutToolbar
+                    layout={appearance.layout}
+                    onChange={updateLayout}
+                />
+            </FloatingToolbar>
 
 
 

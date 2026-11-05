@@ -1,14 +1,15 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import {useRef, useState } from "react";
 import FullscreenButton from "./components/FullscreenButton";
 import Zoom from "./features/zoom/Zoom";
-import SheetEditor from "./features/sheet/SheetEditor";
 import usePages from "./features/pages/usePages";
-import type { Page } from "./features/pages/page.types";
-import PageNavigation from "./features/pages/PageNavigation";
 import ToolbarManager from "./features/toolbar/ToolbarManager";
-import { Appearance } from "./features/toolbar/appearance/appearance.types";
+
+import type { Appearance } from "./features/toolbar/appearance/appearance.types";
+import { defaultAppearance } from "./features/toolbar/appearance/appearance.defaults";
+import useSelection from "./features/toolbar/selection/useSelection";
+import PageWorkspace from "./features/pages/PageWorkspace";
 
 
 export default function Folio() {
@@ -16,7 +17,6 @@ export default function Folio() {
     const containerRef = useRef<HTMLDivElement>(null);
     
     const [zoom, setZoom] = useState(100);
-    const [isToolbarSelected, setIsToolbarSelected] = useState(false);
 
     const {
         pages,
@@ -28,73 +28,68 @@ export default function Folio() {
         goToNextPage,
     } = usePages("A6")
 
-    const handlePageChange = useCallback(
-        (updatedPage: Page) => {
-            updatePage(updatedPage);
-        },
-        [updatePage]
-    );
 
-    const handleAppearanceChange = useCallback(
-        (newAppearance: Appearance) => {
-            if (!activePage) return;
-
-            updatePage({
-                ...activePage,
-                appearance: newAppearance,
-            });
-        },
-        [activePage, updatePage]
-    );
-
-    const controlsRef = useRef<HTMLDivElement>(null);
     const [controlsContainer, setControlsContainer] = useState<HTMLDivElement | null>(null);
+
+    const [appearance, setAppearance] = useState<Appearance>(defaultAppearance);
+
+    const {
+        selection,
+        selectElement,
+        selectTextRange,
+        clearSelection,
+    } = useSelection();
+
+    const background = appearance.colors.background;
+    const backgroundStyle: React.CSSProperties =
+        background.type === "image" && background.image
+            ? {
+                backgroundColor: background.color,
+                backgroundImage: `url(${background.image})`,
+                backgroundSize: background.size,
+                backgroundRepeat: background.size === "repeat" ? "repeat" : "no-repeat",
+            }
+            : {
+                backgroundColor: background.color,
+            };
 
     return (
         <div 
-            ref={containerRef} 
-            className="min-h-0 flex-1 overflow-auto flex flex-col items-center justify-start gap-4 bg-[#ffffe3] text-[#454536] font-sans p-4"
+            ref={containerRef}
+            style={{
+                ...backgroundStyle,
+                color: appearance.colors.color,
+                fontFamily: appearance.typography.fontFamily
+            }}
+            className="min-h-0 flex-1 overflow-auto flex flex-col items-center justify-start gap-4 p-4"
             onPointerDown={(event) => {
                 if (event.target === event.currentTarget) {
-                    setIsToolbarSelected(false);
+                    clearSelection();
                 }
             }}
         >
             <Zoom zoom={zoom} onZoomChange={setZoom} />
 
+            <ToolbarManager controlsContainer={controlsContainer} appearance={appearance} onAppearanceChange={setAppearance} />
+
             <div className="my-auto flex w-full flex-col items-center gap-4 shrink-0">
                 {activePage && (
-                    <SheetEditor
+                    <PageWorkspace
                         key={activePage.id}
-                        zoom={zoom}
                         page={activePage}
-                        onPageChange={handlePageChange}
-                        renderFormatTool={(format, onFormatChange) => (
-                            <ToolbarManager
-                                format={format}
-                                onFormatChange={onFormatChange}
-                                controlsContainer={controlsContainer}
-                                appearance={activePage.appearance}
-                                onAppearanceChange={handleAppearanceChange}
-                            />
-                        )}
+                        zoom={zoom}
+                        currentPage={activePageIndex}
+                        totalPages={pages.length}
+                        onPrevious={goToPreviousPage}
+                        onNext={goToNextPage}
+                        onCreate={createPage}
+                        onPageChange={updatePage}
                     />
                 )}
-
-                <PageNavigation
-                    currentPage={activePageIndex}
-                    totalPages={pages.length}
-                    onPrevious={goToPreviousPage}
-                    onNext={goToNextPage}
-                    onCreate={createPage}
-                />
             </div>
 
             <div 
-                ref={(node) => {
-                    controlsRef.current = node;
-                    setControlsContainer(node);
-                }}
+                ref={setControlsContainer}
                 className="fixed bottom-4 right-4 z-50 flex items-center gap-2"
             >
                 <FullscreenButton containerRef={containerRef} />

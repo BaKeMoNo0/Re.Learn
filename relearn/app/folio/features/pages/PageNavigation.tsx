@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import FormatTool from "../sheet/FormatTool";
+import type { SheetFormat } from "../sheet/formats";
 
 type Props = {
     currentPage: number;
@@ -8,6 +10,8 @@ type Props = {
     onPrevious: () => void;
     onNext: () => void;
     onCreate: () => void;
+    format: SheetFormat;
+    onFormatChange: (format: SheetFormat) => void;
 };
 
 export default function PageNavigation({
@@ -16,6 +20,8 @@ export default function PageNavigation({
     onPrevious,
     onNext,
     onCreate,
+    format,
+    onFormatChange,
 }: Props) {
 
     useEffect(() => {
@@ -53,26 +59,31 @@ export default function PageNavigation({
 
     
     return (
-        <div className="flex w-full max-w-99.25 items-center justify-between px-2 text-[#777b5b]">
+        <div className="flex w-full max-w-99.25 items-center justify-between px-2 text-[#454536]">
             <button
                 type="button"
                 onClick={onPrevious}
                 disabled={currentPage === 0}
                 aria-label="Page précédente"
-                className="rounded-full p-2 transition hover:bg-[#d8d9b8]
+                className="rounded-full p-2 text-[#454536] transition hover:bg-[#d8d9b8]
                            disabled:cursor-default disabled:opacity-30"
             >
                 ←
             </button>
 
-            <span className="text-xs">
+            <span className="whitespace-nowrap text-xs">
                 Page {currentPage + 1} / {totalPages}
             </span>
+
+            <FormatTool
+                format={format}
+                onFormatChange={onFormatChange}
+            />
 
             <button
                 type="button"
                 onClick={onCreate}
-                className="flex items-center gap-2 rounded-full
+                className="flex items-center gap-2 whitespace-nowrap rounded-full
                            border border-[#d8d9b8] px-3 py-2
                            text-sm transition hover:bg-[#d8d9b8]"
             >
@@ -85,7 +96,7 @@ export default function PageNavigation({
                 onClick={onNext}
                 disabled={currentPage === totalPages - 1}
                 aria-label="Page suivante"
-                className="rounded-full p-2 transition hover:bg-[#d8d9b8]
+                className="rounded-full p-2 text-[#454536] transition hover:bg-[#d8d9b8]
                            disabled:cursor-default disabled:opacity-30"
             >
                 →

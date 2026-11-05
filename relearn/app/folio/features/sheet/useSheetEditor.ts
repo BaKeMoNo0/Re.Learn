@@ -3,26 +3,28 @@
 
 import { useState } from "react";
 import { fitsInFormat, largestFittingPrefix } from "./sheet.utils";
-import type { SheetFormat } from "./sheet.types";
+import type { SheetFormat } from "../sheet/formats";
+import type { PageUpdate } from "../pages/page.types";
 
-//Gérer le contenu, le format et l'état de correction
+type Props = {
+    format: SheetFormat;
+    content: string;
+    onPageUpdate: (updates: PageUpdate) => void;
+};
 
-export function useSheetEditor(
-    initialFormat: SheetFormat = "A4",
-    initialContent = ""
-) {
-    const [format, setFormat] = useState<SheetFormat>(initialFormat);
-    const [content, setContent] = useState(initialContent);
-    const [pendingFormat, setPendingFormat] =
-        useState<SheetFormat | null>(null);
-    const [previewFormat, setPreviewFormat] =
-        useState<SheetFormat | null>(null);
+export function useSheetEditor({
+    format,
+    content,
+    onPageUpdate,
+}: Props) {
+    const [pendingFormat, setPendingFormat] = useState<SheetFormat | null>(null);
+    const [previewFormat, setPreviewFormat] = useState<SheetFormat | null>(null);
 
     function requestFormatChange(nextFormat: SheetFormat) {
         if (nextFormat === format) return;
 
         if (fitsInFormat(content, nextFormat)) {
-            setFormat(nextFormat);
+            onPageUpdate({ format: nextFormat });
             setPreviewFormat(null);
             setPendingFormat(null);
             return;
@@ -56,7 +58,7 @@ export function useSheetEditor(
     function applyPreviewFormat() {
         if (!previewFormat || !canApplyPreview()) return;
 
-        setFormat(previewFormat);
+        onPageUpdate({ format: previewFormat });
         setPreviewFormat(null);
     }
 
@@ -68,8 +70,10 @@ export function useSheetEditor(
             pendingFormat
         );
 
-        setContent(nextContent);
-        setFormat(pendingFormat);
+        onPageUpdate({
+            format: pendingFormat,
+            content: nextContent,
+        });
         setPendingFormat(null);
         setPreviewFormat(null);
     }
@@ -80,7 +84,7 @@ export function useSheetEditor(
         // nouvelle limite, sans le rendre inaccessible.
         if (!fitsInFormat(nextContent, format)) return;
 
-        setContent(nextContent);
+        onPageUpdate({ content: nextContent });
     }
 
     return {

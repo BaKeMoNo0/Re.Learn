@@ -85,12 +85,23 @@ export default function FloatingToolbar({
         dragRef.current = null;
     }
 
+    function handleToggle() {
+        setPosition({
+            x: 0,
+            y: initialTop,
+        });
+
+        setIsOpen((open) => !open);
+        dragRef.current = null;
+    }
+
     const isRight = side === "right";
 
     return (
         <div
-            className="fixed z-40"
+            className="fixed"
             style={{
+                zIndex: isOpen ? 50 : 40,
                 top: position.y,
                 left: isRight ? undefined : 0,
                 right: isRight ? 0 : undefined,
@@ -117,7 +128,7 @@ export default function FloatingToolbar({
                     aria-label={`Ouvrir la barre : ${label}`}
                     aria-expanded={isOpen}
                     title={label}
-                    onClick={() => setIsOpen((open) => !open)}
+                    onClick={handleToggle}
                     className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#d5d5b5] bg-[#ffffe3] text-xl shadow-lg hover:bg-[#eeeed7]"
                 >
                     {icon}

@@ -1,48 +1,20 @@
 
 "use client";
 
-import { useEffect } from "react";
-import type { ReactNode } from "react";
-import { useSheetEditor } from "./useSheetEditor";
 import Sheet from "./Sheet";
 import FormatChangeDialog from "./FormatChangeDialog";
-import type { SheetFormat } from "./sheet.types";
-import type { Page } from "../pages/page.types";
+import type { useSheetEditor } from "./useSheetEditor";
+
+type Editor = ReturnType<typeof useSheetEditor>;
 
 type Props = {
     zoom: number;
-    page: Page;
-    onPageChange: (page: Page) => void;
-    renderFormatTool: (
-        format: SheetFormat,
-        onFormatChange: (format: SheetFormat) => void
-    ) => ReactNode;
+    editor: Editor;
 };
 
-export default function SheetEditor({zoom, page, onPageChange, renderFormatTool}: Props) {
-    const editor = useSheetEditor(page.format, page.content);
-
-    useEffect(() => {
-        onPageChange({
-            ...page,
-            format: editor.format,
-            content: editor.content,
-        });
-    }, [
-        page.id,
-        page.title,
-        page.appearance,
-        editor.format,
-        editor.content,
-        onPageChange,
-    ]);
-
+export default function SheetEditor({zoom, editor}: Props) {
     return (
         <div className="flex flex-col items-center gap-4">
-            {renderFormatTool(
-                editor.format,
-                editor.requestFormatChange
-            )}
 
             <Sheet
                 format={editor.format}

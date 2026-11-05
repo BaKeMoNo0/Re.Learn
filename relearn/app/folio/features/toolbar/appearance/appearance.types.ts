@@ -1,4 +1,4 @@
-export type BackgroundAppearance = {
+export type BackgroundStyle = {
     type: "color" | "image";
     color: string;
     image: string | null;
@@ -6,21 +6,41 @@ export type BackgroundAppearance = {
     size: "cover" | "contain" | "repeat";
 };
 
-export type ButtonAppearance = {
-    backgroundColor: string;
-    textColor: string;
+export type ColorStyle = {
+    color: string;
+    background: BackgroundStyle;
     borderColor: string;
+};
+
+export type TypographyStyle = {
+    fontFamily: string;
+    fontSize: number;
+    fontWeight: number;
+    fontStyle: "normal" | "italic";
+    lineHeight: number;
+    textAlign: "left" | "center" | "right" | "justify";
+    textDecorationLine: "none" | "underline" | "overline" | "line-through";
+    textDecorationStyle: "solid" | "double" | "dotted" | "dashed" | "wavy";
+    textDecorationColor: string;
+    letterSpacing: number;
+};
+
+export type LayoutStyle = {
+    width: number;
+    height: number;
+    padding: number;
+    margin: number;
     borderRadius: number;
 };
 
-export type TypographyAppearance = {
-    fontFamily: string;
-    color: string;
-    fontSize: number;
-};
 
 export type Appearance = {
-    background: BackgroundAppearance;
-    buttons: ButtonAppearance;
-    typography: TypographyAppearance;
+    colors: ColorStyle;
+    typography: TypographyStyle;
+    layout: LayoutStyle;
 };
+
+export type AppearanceTarget =
+    | { type: "folio" }
+    | { type: "element"; id: string }
+    | { type: "group"; id: string };

@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { Page } from "./page.types";
-import type { SheetFormat } from "../sheet/sheet.types";
-import { defaultAppearance } from "../toolbar/appearance/appearance.defaults";
+import type { Page, PageUpdate } from "./page.types";
+import type { SheetFormat } from "../sheet/formats";
 
 export default function usePages(
     initialFormat: SheetFormat
@@ -16,8 +15,7 @@ export default function usePages(
             id: crypto.randomUUID(),
             title: "Page 1",
             content: "",
-            format: initialFormat,
-            appearance: defaultAppearance,
+            format: initialFormat
         };
 
         setPages([firstPage]);
@@ -37,23 +35,25 @@ export default function usePages(
             id: crypto.randomUUID(),
             title: `Page ${pages.length + 1}`,
             content: "",
-            format: activePage.format,
-            appearance: structuredClone(defaultAppearance),
+            format: activePage.format
         };
 
         setPages((currentPages) => [...currentPages, newPage]);
         setActivePageId(newPage.id);
     }
 
-    const updatePage = useCallback((updatedPage: Page) => {
-        setPages((currentPages) =>
-            currentPages.map((page) =>
-                page.id === updatedPage.id
-                    ? updatedPage
-                    : page
-            )
-        );
-    }, []);
+    const updatePage = useCallback(
+        (pageId: string, updates: PageUpdate) => {
+            setPages((currentPages) =>
+                currentPages.map((page) =>
+                    page.id === pageId
+                        ? { ...page, ...updates }
+                        : page
+                )
+            );
+        },
+        []
+    );
 
     function goToPreviousPage() {
         if (activePageIndex > 0) {

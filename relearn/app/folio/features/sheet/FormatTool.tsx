@@ -2,11 +2,11 @@
 "use client";
 
 import { useState } from "react";
-import { formats, type Format as FormatType } from "./formats";
+import { formats, SheetFormat } from "./formats";
 
 type FormatProps = {
-    format: FormatType;
-    onFormatChange: (format: FormatType) => void;
+    format: SheetFormat;
+    onFormatChange: (format: SheetFormat) => void;
 };
 
 export default function Format({
@@ -23,11 +23,9 @@ export default function Format({
                 aria-label={`Format du document : ${format}`}
                 aria-expanded={isFormatMenuOpen}
                 onClick={() => setIsFormatMenuOpen(!isFormatMenuOpen)}
-                className={`flex h-11 min-w-11 items-center justify-center gap-1 rounded-full px-3 text-sm font-semibold transition-colors ${
-                    isFormatMenuOpen
-                        ? "bg-[#777b5b] text-[#ffffe3]"
-                        : "bg-[#d8d9b8] text-[#454536] hover:bg-[#c6c9a0]"
-                }`}
+                className="flex h-11 min-w-11 items-center justify-center 
+                           gap-1 border border-[#d8d9b8] rounded-full px-3 text-sm 
+                           transition-colors hover:bg-[#d8d9b8]"
             >
                 {format}
                 <svg
@@ -48,17 +46,16 @@ export default function Format({
             </button>
 
             {isFormatMenuOpen && (
-                <div className="absolute bottom-full left-1/2 z-20 mb-3 -translate-x-1/2">
-                    <div className="flex flex-row min-w-48 rounded-2xl border border-[#d5d5b5] bg-[#f7f7e7] p-2 shadow-lg">
+                <div className="absolute bottom-full left-1/2 z-50 mb-3 -translate-x-1/2">
+                    <div className="min-w-36 rounded-2xl border border-[#d5d5b5] bg-[#ffffe3] p-2 shadow-lg">
                         <p className="px-3 py-2 text-xs font-medium uppercase tracking-wider text-[#85856b]">
                             Format papier
                         </p>
 
                         {(
-                            Object.keys(formats) as FormatType[]
+                            Object.keys(formats) as SheetFormat[]
                         ).map((item) => {
                             const selected = format === item;
-                            const dimensions = formats[item];
 
                             return (
                                 <button
@@ -69,19 +66,17 @@ export default function Format({
                                         onFormatChange(item);
                                         setIsFormatMenuOpen(false);
                                     }}
-                                    className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors ${
+                                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors ${
                                         selected
-                                            ? "bg-[#a7a78a] font-semibold text-[#ffffe3]"
-                                            : "text-[#454536] hover:bg-[#e5e5ce]"
+                                            ? "bg-[#777b5b] font-semibold text-[#ffffe3]"
+                                            : "text-[#454536] hover:bg-[#d8d9b8]"
                                     }`}
                                 >
-                                    <span>{item}</span>
+                                    {item}
                                 </button>
                             );
                         })}
                     </div>
-
-                    <div className="absolute left-1/2 top-full -translate-x-1/2 border-x-[7px] border-t-[7px] border-x-transparent border-t-[#f7f7e7]" />
                 </div>
             )}
         </div>

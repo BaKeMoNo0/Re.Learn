@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import type { SheetFormat } from "./sheet.types";
+import type { SheetFormat } from "../sheet/formats";
 
 type Props = {
     fromFormat: SheetFormat;
