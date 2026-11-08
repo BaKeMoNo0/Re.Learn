@@ -6,9 +6,9 @@ import { createPortal } from "react-dom";
 
 import FloatingToolbar from "./FloatingToolbar";
 
-import ColorToolbar from "./appearance/colors/ColorToolbar";
-import TypographyToolbar from "./appearance/typography/TypographyToolbar";
-import LayoutToolbar from "./appearance/layout/LayoutToolbar";
+import ColorToolbar from "./tools/colors/ColorToolbar";
+import TypographyToolbar from "./tools/typography/TypographyToolbar";
+import LayoutToolbar from "./tools/layout/LayoutToolbar";
 
 import type { Appearance } from "./appearance/appearance.types";
 
@@ -17,6 +17,10 @@ type ToolbarManagerProps = {
     
     appearance: Appearance;
     onAppearanceChange: (appearance: Appearance) => void;
+
+    context: any; // Replace 'any' with the actual type of context
+    selection: any; // Replace 'any' with the actual type of selection
+    mode: any; // Replace 'any' with the actual type of mode
 };
 
 export default function ToolbarManager({
@@ -25,11 +29,11 @@ export default function ToolbarManager({
     onAppearanceChange,
 }: ToolbarManagerProps) {
 
-    const [toolbarResetKey, setToolbarResetKey] = useState(0);
+    const [toolbarResetTrigger, setToolbarResetTrigger] = useState(0);
     const [visible, setVisible] = useState(true);
 
     const resetToolbarPositions = () => {
-        setToolbarResetKey((key) => key + 1);
+        setToolbarResetTrigger((trigger) => trigger + 1);
     };
 
     const updateColors = (colors: Appearance["colors"]) => {
@@ -63,7 +67,7 @@ export default function ToolbarManager({
                 label="Couleurs"
                 side="left"
                 initialTop={140}
-                resetKey={toolbarResetKey}
+                resetKey={toolbarResetTrigger}
                 visible={visible}
             >
                 <ColorToolbar
@@ -78,7 +82,7 @@ export default function ToolbarManager({
                 label="Typographie"
                 side="left"
                 initialTop={200}
-                resetKey={toolbarResetKey}
+                resetKey={toolbarResetTrigger}
                 visible={visible}
             >
                 <TypographyToolbar
@@ -93,7 +97,7 @@ export default function ToolbarManager({
                 label="Disposition"
                 side="left"
                 initialTop={260}
-                resetKey={toolbarResetKey}
+                resetKey={toolbarResetTrigger}
                 visible={visible}
             >
                 <LayoutToolbar

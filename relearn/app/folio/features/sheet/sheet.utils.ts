@@ -6,10 +6,7 @@ import type { SheetFormat } from "../sheet/formats";
 
 const SHEET_INSET = 42; // Bordures + padding p-5
 
-export function fitsInFormat(
-    content: string,
-    format: SheetFormat
-): boolean {
+export function fitsInFormat(content: string, format: SheetFormat): boolean {
     if (typeof document === "undefined") return true;
 
     const dimensions = formats[format];
@@ -45,10 +42,7 @@ export function fitsInFormat(
     return fits;
 }
 
-export function largestFittingPrefix(
-    content: string,
-    format: SheetFormat
-): string {
+export function largestFittingPrefix(content: string, format: SheetFormat): string {
     const characters = Array.from(content);
     let low = 0;
     let high = characters.length;

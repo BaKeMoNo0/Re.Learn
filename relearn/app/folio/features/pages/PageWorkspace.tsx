@@ -27,7 +27,7 @@ export default function PageWorkspace({
     onPageChange, 
 }: PageWorkspaceProps) {
 
-     const editor = useSheetEditor({
+    const editor = useSheetEditor({
         format: page.format,
         content: page.content,
         onPageUpdate: (updates) => onPageChange(page.id, updates),

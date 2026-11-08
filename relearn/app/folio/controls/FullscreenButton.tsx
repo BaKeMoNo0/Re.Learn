@@ -11,10 +11,6 @@ export default function FullscreenButton({ containerRef }: FullscreenButtonProps
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     useEffect(() => {
-        if (containerRef.current) {
-            // Request fullscreen for the container div
-            containerRef.current.requestFullscreen()
-        }
 
         const handleFullscreenChange = () => {
             setIsFullscreen(

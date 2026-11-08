@@ -15,7 +15,7 @@ export const defaultColors: ColorStyle = {
         opacity: 1,
         size: "cover",
     },
-    borderColor: "#a7a78a",
+    borderColor: "#d8d9b8",
 };
 
 export const defaultTypography: TypographyStyle = {

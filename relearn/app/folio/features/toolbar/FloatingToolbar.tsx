@@ -99,6 +99,8 @@ export default function FloatingToolbar({
 
     return (
         <div
+            data-selection-scope="floating-toolbar"
+            data-selection-id={label.toLowerCase()}
             className="fixed"
             style={{
                 zIndex: isOpen ? 50 : 40,

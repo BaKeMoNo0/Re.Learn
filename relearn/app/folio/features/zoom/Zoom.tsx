@@ -40,7 +40,7 @@ export default function Zoom({ zoom, onZoomChange }: ZoomProps) {
 
     return (
         <div
-            className="flex min-w-16 items-center justify-center rounded-full px-3 py-2 text-sm font-medium text-[#454536]"
+            className="flex min-w-16 items-center justify-center rounded-full px-3 py-2 text-sm font-medium"
             aria-label={`Zoom : ${zoom} %`}
             title="Pincer sur le pavé tactile ou utiliser Ctrl + molette"
         >

@@ -46,8 +46,7 @@ export function useSheetEditor({
 
     function canApplyPreview() {
         return (
-            previewFormat !== null &&
-            fitsInFormat(content, previewFormat)
+            previewFormat !== null && fitsInFormat(content, previewFormat)
         );
     }
 

@@ -59,13 +59,17 @@ export default function PageNavigation({
 
     
     return (
-        <div className="flex w-full max-w-99.25 items-center justify-between px-2 text-[#454536]">
+        <div 
+            data-selection-scope="page-navigation"
+            data-selection-id="main-navigation"
+            className="flex w-full max-w-99.25 items-center justify-between px-2"
+        >
             <button
                 type="button"
                 onClick={onPrevious}
                 disabled={currentPage === 0}
                 aria-label="Page précédente"
-                className="rounded-full p-2 text-[#454536] transition hover:bg-[#d8d9b8]
+                className="rounded-full p-2 transition hover:bg-[#d8d9b8]
                            disabled:cursor-default disabled:opacity-30"
             >
                 ←
@@ -96,7 +100,7 @@ export default function PageNavigation({
                 onClick={onNext}
                 disabled={currentPage === totalPages - 1}
                 aria-label="Page suivante"
-                className="rounded-full p-2 text-[#454536] transition hover:bg-[#d8d9b8]
+                className="rounded-full p-2 transition hover:bg-[#d8d9b8]
                            disabled:cursor-default disabled:opacity-30"
             >
                 →

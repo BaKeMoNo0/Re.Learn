@@ -1,0 +1,211 @@
+Fondamentaux à voir ou revoir :
+
+JavaScript : fonctions, closures, callbacks, événements, objets, références, asynchronisme, Promises.
+
+React : rendu, props, state, hooks, cycle de vie, références, composants.
+
+Conception : responsabilités, modularité, dépendances, séparation des préoccupations.
+
+
+
+- à quoi sert useEffect ?
+c'est un Hook React qui permet de synchroniser ton composant avec quelque chose d'extérieur à React.
+
+Par exemple :
+- Écouter un événement du navigateur (resize, scroll, fullscreenchange...).
+- Déclencher un timer.
+- Récupérer des données depuis une API.
+- Interagir avec une bibliothèque externe.
+- Modifier ou observer certains comportements du navigateur.
+
+L'idée fondamentale est que React gère l'affichage de ton application, mais certaines fonctionnalités dépendent de choses qui existent en dehors de React. useEffect permet de faire le lien entre les deux.
+
+Quand est-ce que useEffect est appelé ?
+
+useEffect(() => {
+    // Code exécuté après le rendu
+
+    return () => {
+        // Nettoyage
+    };
+}, []);
+
+Le deuxième argument est un tableau de dépendances.
+Il détermine quand React doit réexécuter l'effet.
+Il existe trois possibilités :
+
+1. Sans tableau de dépendances
+useEffect(() => {
+    console.log("Effect");
+});
+
+
+L'effet est exécuté après chaque rendu du composant.
+
+2. Avec un tableau vide
+useEffect(() => {
+    console.log("Effect");
+}, []);
+
+L'effet est exécuté après le premier rendu du composant.
+Il ne sera pas réexécuté lors des rendus suivants.
+
+3. Avec des dépendances
+useEffect(() => {
+    console.log("Effect");
+}, [isFullscreen]);
+
+
+L'effet est exécuté après le premier rendu, puis à chaque fois que isFullscreen change de valeur.
+
+
+Pourquoi faire un return avec removeEventListener ?
+
+il faut comprendre une particularité de useEffect.
+Le return d'un useEffect n'est pas un retour classique comme dans une fonction normale.
+C'est une fonction de nettoyage (cleanup function).
+Elle sert à annuler ce qu'on a mis en place dans l'effet.
+
+
+Pourquoi est-ce nécessaire ?
+Imaginons que ton composant soit supprimé.
+
+Par exemple, tu quittes la page Folio pour revenir à l'accueil.
+
+Si tu ne supprimes pas l'écouteur, le navigateur conserve une référence vers ta fonction.
+
+Cela peut entraîner des comportements indésirables :
+- La fonction peut continuer à être appelée alors que ton composant n'existe plus.
+- Tu conserves inutilement des références.
+- Tu risques des problèmes si le composant est remonté plusieurs fois.
+Le nettoyage permet donc de libérer correctement les ressources utilisées par ton effet.
+
+
+Est-ce que le addEventListener est immédiatement supprimé par le return ?
+Non !
+
+Il faut distinguer deux choses :
+- Le return retourne une fonction.
+- Cette fonction sera exécutée plus tard par React.
+
+Cycle de vie de ton useEffect
+1. Le composant est affiché
+   
+   React effectue le premier rendu de Folio.
+2. React exécute le useEffect
+   
+   Le tableau [] indique qu'il n'y a pas de dépendances à surveiller.
+3. Installation de l'écouteur
+   
+   addEventListener demande au navigateur d'écouter fullscreenchange.
+4. React récupère la fonction de nettoyage
+   
+   Le return fournit une fonction à React. Elle n'est pas exécutée immédiatement.
+5. Le composant continue de fonctionner
+   
+   L'écouteur reste actif. Chaque événement fullscreenchange déclenche handleFullscreenChange.
+6. Le composant est démonté
+   
+   React exécute la fonction de nettoyage et retire l'écouteur.
+
+
+Comment s'appelle la notation () => {} ?
+Elle s'appelle une fonction fléchée (Arrow Function).
+
+function sayHello() {
+    console.log("Hello");
+}
+
+const sayHello = () => {
+    console.log("Hello");
+};
+
+
+Mais pourquoi utilise-t-on autant cette notation en React ?
+Parce qu'en JavaScript, une fonction est aussi une valeur que l'on peut transmettre à une autre fonction.
+C'est un concept fondamental.
+
+il faut savoir que useEffect est une fonction qui attend deux arguments :
+setup : une fonction que React exécutera après le rendu.
+dependencies : les valeurs qui déterminent quand React doit réexécuter cette fonction.
+
+const myEffect = () => {
+    console.log("Hello");
+};
+
+useEffect(myEffect(), []);
+
+
+Ce n'est pas la même chose !
+- myEffect : tu transmets la fonction.
+- myEffect() : tu exécutes la fonction et tu transmets son résultat.
+
+
+
+
+C'est quoi une fonction async ?
+
+Une fonction async est une fonction qui permet notamment d'utiliser await pour travailler avec des opérations asynchrones.
+
+Imagine que tu demandes à JavaScript d'effectuer trois opérations :
+console.log("A");
+console.log("B");
+console.log("C");
+
+Exécution synchrone : A → B → C
+
+Maintenant, imaginons que tu demandes au navigateur de télécharger une image.
+
+Le téléchargement peut prendre quelques millisecondes ou plusieurs secondes.
+
+Tu ne veux pas que JavaScript bloque toute l'application en attendant que le téléchargement soit terminé.
+C'est là qu'intervient l'asynchrone.
+JavaScript peut lancer une opération, continuer à travailler et être prévenu lorsque l'opération est terminée.
+C'est ce qu'on appelle l'asynchronisme.
+
+
+À quoi sert async ?
+Prenons une fonction :
+async function sayHello() {
+    console.log("Hello");
+}
+Le mot-clé async indique que cette fonction est asynchrone.
+Mais il y a une particularité importante :
+Une fonction async retourne toujours une Promise.
+Une Promise est un objet JavaScript qui représente le résultat futur d'une opération.
+Elle peut être dans trois états :
+État	Signification
+pending	L'opération est en cours
+fulfilled	L'opération a réussi
+rejected	L'opération a échoué
+Même si ta fonction ne fait rien d'asynchrone, elle retourne quand même une Promise lorsqu'elle est déclarée async.
+
+
+À quoi sert await ?
+C'est probablement la partie la plus importante pour comprendre ton code.
+await signifie essentiellement :
+Attends que cette Promise soit terminée avant de continuer l'exécution de cette fonction.
+Attention : await ne bloque pas tout JavaScript. Il suspend uniquement la suite de l'exécution de cette fonction async. Le navigateur et les autres tâches peuvent continuer à fonctionner.
+
+
+Faire un parcours où chaque notion est :
+1. Expliquée avec son fonctionnement.
+2. Illustrée avec des exemples indépendants de Folio.
+3. Mise en pratique dans un petit exercice.
+4. Réutilisée ensuite dans ton projet.
+
+Commencer par les fondamentaux JavaScript suivants :
+- Fonctions et fonctions fléchées.
+- Paramètres, arguments et valeurs de retour.
+- Portée des variables et closures.
+- Objets, tableaux et références.
+- Callbacks et événements.
+- Promises, async et await.
+
+Puis React :
+- Le rendu et le cycle de vie.
+- Props et composants.
+- State et useState.
+- Références et useRef.
+- useEffect et nettoyage.
+- Composition et architecture.

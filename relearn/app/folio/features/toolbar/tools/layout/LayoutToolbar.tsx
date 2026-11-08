@@ -1,6 +1,6 @@
 "use client";
 
-import type { LayoutStyle } from "../appearance.types";
+import type { LayoutStyle } from "../../appearance/appearance.types";
 
 type LayoutToolbarProps = {
     layout: LayoutStyle;

@@ -1,7 +1,7 @@
 "use client";
 
 import ColorPicker from "./ColorPicker";
-import type { ColorStyle } from "../appearance.types";
+import type { ColorStyle } from "../../appearance/appearance.types";
 
 type ColorToolbarProps = {
     colors: ColorStyle;

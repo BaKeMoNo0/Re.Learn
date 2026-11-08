@@ -48,7 +48,7 @@ export default function Format({
             {isFormatMenuOpen && (
                 <div className="absolute bottom-full left-1/2 z-50 mb-3 -translate-x-1/2">
                     <div className="min-w-36 rounded-2xl border border-[#d5d5b5] bg-[#ffffe3] p-2 shadow-lg">
-                        <p className="px-3 py-2 text-xs font-medium uppercase tracking-wider text-[#85856b]">
+                        <p className="px-3 py-2 text-xs font-medium uppercase tracking-wider">
                             Format papier
                         </p>
 
@@ -68,8 +68,8 @@ export default function Format({
                                     }}
                                     className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors ${
                                         selected
-                                            ? "bg-[#777b5b] font-semibold text-[#ffffe3]"
-                                            : "text-[#454536] hover:bg-[#d8d9b8]"
+                                            ? "bg-[#777b5b] font-semibold"
+                                            : "hover:bg-[#d8d9b8]"
                                     }`}
                                 >
                                     {item}

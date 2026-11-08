@@ -18,6 +18,7 @@ export default function Sheet({ format, zoom, content, previewFormat, onContentC
 
     return (
         <div
+            data-selection-scope="sheet"
             style={{
                 width: currentFormat.width,
                 height: currentFormat.height * (zoom / 100),
@@ -38,9 +39,7 @@ export default function Sheet({ format, zoom, content, previewFormat, onContentC
             >
                 <textarea
                     value={content}
-                    onChange={(event) =>
-                        onContentChange(event.currentTarget.value)
-                    }
+                    onChange={(event) => onContentChange(event.currentTarget.value)}
                     placeholder="Ecrire ici..."
                     className="relative z-0 block box-border h-full w-full 
                             resize-none overflow-hidden border-none 
