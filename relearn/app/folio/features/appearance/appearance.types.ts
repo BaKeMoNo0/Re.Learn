@@ -1,3 +1,5 @@
+import { SelectionScope } from "../editor/selection/selection.types";
+
 export type BackgroundStyle = {
     type: "color" | "image";
     color: string;
@@ -40,7 +42,21 @@ export type Appearance = {
     layout: LayoutStyle;
 };
 
+
+/**
+ * Identifie l'objet dont on souhaite modifier l'apparence.
+ */
 export type AppearanceTarget =
-    | { type: "folio" }
-    | { type: "element"; id: string }
-    | { type: "group"; id: string };
+    | { type: "folio"; }
+    | { type: "sheet"; id: string;};
+    //| { type: "element"; id: string; scope: SelectionScope;};
+
+
+/**
+ * Stocke les apparences de l'application.
+ */
+export type AppearanceStore = {
+    folio: Appearance;
+    sheets: Record<string, Appearance>;
+    //elements: Record<string, Appearance>;
+};

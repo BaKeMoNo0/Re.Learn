@@ -34,7 +34,7 @@ export const defaultTypography: TypographyStyle = {
 export const defaultLayout: LayoutStyle = {
     width: 0,
     height: 0,
-    padding: 0,
+    padding: 20,
     margin: 0,
     borderRadius: 12,
 };

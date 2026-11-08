@@ -10,23 +10,25 @@ import ColorToolbar from "./tools/colors/ColorToolbar";
 import TypographyToolbar from "./tools/typography/TypographyToolbar";
 import LayoutToolbar from "./tools/layout/LayoutToolbar";
 
-import type { Appearance } from "./appearance/appearance.types";
+import type { Appearance, ColorStyle, LayoutStyle, TypographyStyle,} from "../appearance/appearance.types";
+
 
 type ToolbarManagerProps = {
     controlsContainer: HTMLDivElement | null;
     
-    appearance: Appearance;
-    onAppearanceChange: (appearance: Appearance) => void;
+    appearance: Appearance | null;
 
-    context: any; // Replace 'any' with the actual type of context
-    selection: any; // Replace 'any' with the actual type of selection
-    mode: any; // Replace 'any' with the actual type of mode
+    onColorsChange: (colors: ColorStyle) => void;
+    onTypographyChange: (typography: TypographyStyle) => void;
+    onLayoutChange: (layout: LayoutStyle) => void;
 };
 
 export default function ToolbarManager({
     controlsContainer,
     appearance,
-    onAppearanceChange,
+    onColorsChange,
+    onTypographyChange,
+    onLayoutChange,
 }: ToolbarManagerProps) {
 
     const [toolbarResetTrigger, setToolbarResetTrigger] = useState(0);
@@ -36,77 +38,56 @@ export default function ToolbarManager({
         setToolbarResetTrigger((trigger) => trigger + 1);
     };
 
-    const updateColors = (colors: Appearance["colors"]) => {
-        onAppearanceChange({
-            ...appearance,
-            colors,
-        });
-    };
-
-    const updateTypography = (
-        typography: Appearance["typography"]
-    ) => {
-        onAppearanceChange({
-            ...appearance,
-            typography,
-        });
-    };
-
-    const updateLayout = (layout: Appearance["layout"]) => {
-        onAppearanceChange({
-            ...appearance,
-            layout,
-        });
-    };
-
     return (
         <>
-            {/* Couleurs */}
-            <FloatingToolbar
-                icon="🎨"
-                label="Couleurs"
-                side="left"
-                initialTop={140}
-                resetKey={toolbarResetTrigger}
-                visible={visible}
-            >
-                <ColorToolbar
-                    colors={appearance.colors}
-                    onChange={updateColors}
-                />
-            </FloatingToolbar>
+            {appearance && (
+                <>
+                    {/* Couleurs */}
+                    <FloatingToolbar
+                        icon="🎨"
+                        label="Couleurs"
+                        side="left"
+                        initialTop={140}
+                        resetKey={toolbarResetTrigger}
+                        visible={visible}
+                    >
+                        <ColorToolbar
+                            colors={appearance.colors}
+                            onChange={onColorsChange}
+                        />
+                    </FloatingToolbar>
 
-            {/* Typographie */}
-            <FloatingToolbar
-                icon="🔤"
-                label="Typographie"
-                side="left"
-                initialTop={200}
-                resetKey={toolbarResetTrigger}
-                visible={visible}
-            >
-                <TypographyToolbar
-                    typography={appearance.typography}
-                    onChange={updateTypography}
-                />
-            </FloatingToolbar>
+                    {/* Typographie */}
+                    <FloatingToolbar
+                        icon="🔤"
+                        label="Typographie"
+                        side="left"
+                        initialTop={200}
+                        resetKey={toolbarResetTrigger}
+                        visible={visible}
+                    >
+                        <TypographyToolbar
+                            typography={appearance.typography}
+                            onChange={onTypographyChange}
+                        />
+                    </FloatingToolbar>
 
-            {/* Disposition */}
-            <FloatingToolbar
-                icon="📏"
-                label="Disposition"
-                side="left"
-                initialTop={260}
-                resetKey={toolbarResetTrigger}
-                visible={visible}
-            >
-                <LayoutToolbar
-                    layout={appearance.layout}
-                    onChange={updateLayout}
-                />
-            </FloatingToolbar>
-
-
+                    {/* Disposition */}
+                    <FloatingToolbar
+                        icon="📏"
+                        label="Disposition"
+                        side="left"
+                        initialTop={260}
+                        resetKey={toolbarResetTrigger}
+                        visible={visible}
+                    >
+                        <LayoutToolbar
+                            layout={appearance.layout}
+                            onChange={onLayoutChange}
+                        />
+                    </FloatingToolbar>
+                </>
+            )}
 
             {/* Commandes globales des toolbars */}
             {controlsContainer &&
@@ -133,7 +114,8 @@ export default function ToolbarManager({
                         </button>
                     </div>,
                     controlsContainer
-                )}
+                )
+            }
         </>
     );
 }

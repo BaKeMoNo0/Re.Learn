@@ -1,7 +1,7 @@
 "use client";
 
 import ColorPicker from "./ColorPicker";
-import type { ColorStyle } from "../../appearance/appearance.types";
+import type { ColorStyle } from "../../../appearance/appearance.types";
 
 type ColorToolbarProps = {
     colors: ColorStyle;
@@ -43,7 +43,7 @@ export default function ColorToolbar({
             />
 
             <ColorPicker
-                label="Fond du Folio"
+                label="Fond"
                 value={colors.background.color}
                 onChange={updateBackgroundColor}
             />

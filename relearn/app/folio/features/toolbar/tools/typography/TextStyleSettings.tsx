@@ -1,6 +1,6 @@
 "use client";
 
-import type { TypographyStyle } from "../../appearance/appearance.types";
+import type { TypographyStyle } from "../../../appearance/appearance.types";
 
 type TextStyleSettingsProps = {
     typography: TypographyStyle;

@@ -1,7 +1,7 @@
 "use client";
 
 import TextStyleSettings from "./TextStyleSettings";
-import type { TypographyStyle } from "../../appearance/appearance.types";
+import type { TypographyStyle } from "../../../appearance/appearance.types";
 
 type TypographyToolbarProps = {
     typography: TypographyStyle;

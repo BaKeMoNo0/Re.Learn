@@ -4,10 +4,12 @@ import type { Page, PageUpdate } from "./page.types";
 import { useSheetEditor } from "../sheet/useSheetEditor";
 import SheetEditor from "../sheet/SheetEditor";
 import PageNavigation from "./PageNavigation";
+import type { Appearance } from "../appearance/appearance.types";
 
 type PageWorkspaceProps = {
     page: Page;
     zoom: number;
+    appearance: Appearance;
     currentPage: number;
     totalPages: number;
     onPrevious: () => void;
@@ -19,6 +21,7 @@ type PageWorkspaceProps = {
 export default function PageWorkspace({ 
     page,
     zoom,
+    appearance,
     currentPage,
     totalPages,
     onPrevious,
@@ -37,8 +40,10 @@ export default function PageWorkspace({
         <div className="my-auto flex w-full flex-col items-center gap-4 shrink-0">
 
             <SheetEditor
+                pageId={page.id}
                 editor={editor}
                 zoom={zoom}
+                appearance={appearance}
             />
 
             <PageNavigation

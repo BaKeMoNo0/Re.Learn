@@ -4,21 +4,27 @@
 import Sheet from "./Sheet";
 import FormatChangeDialog from "./FormatChangeDialog";
 import type { useSheetEditor } from "./useSheetEditor";
+import { Appearance } from "../appearance/appearance.types";
 
 type Editor = ReturnType<typeof useSheetEditor>;
 
 type Props = {
+    pageId: string;
     zoom: number;
     editor: Editor;
+    appearance: Appearance;
 };
 
-export default function SheetEditor({zoom, editor}: Props) {
+export default function SheetEditor({pageId, zoom, editor, appearance}: Props) {
+
     return (
         <div className="flex flex-col items-center gap-4">
 
             <Sheet
+                pageId={pageId}
                 format={editor.format}
                 zoom={zoom}
+                appearance={appearance}
                 content={editor.content}
                 previewFormat={editor.previewFormat}
                 onContentChange={editor.updateContent}
