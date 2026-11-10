@@ -1,6 +1,7 @@
 "use client";
 
 import { Appearance } from "../appearance/appearance.types";
+import { getBackgroundStyle } from "../appearance/appearance.utils";
 import { formats } from "./formats";
 import type { SheetFormat } from "./formats";
 
@@ -21,18 +22,9 @@ export default function Sheet({ pageId, format, zoom, appearance, content, previ
 
     const background = appearance.colors.background;
 
-    const backgroundStyle: React.CSSProperties =
-        background.type === "image" && background.image
-            ? {
-                backgroundColor: background.color,
-                backgroundImage: `url(${background.image})`,
-                backgroundSize: background.size,
-                backgroundRepeat:
-                    background.size === "repeat" ? "repeat" : "no-repeat",
-            }
-            : {
-                backgroundColor: background.color,
-            };
+    const backgroundStyle = getBackgroundStyle(
+        appearance.colors.background
+    );
 
     return (
         <div

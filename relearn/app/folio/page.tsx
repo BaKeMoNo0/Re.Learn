@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback, useRef, useState } from "react";
+import {useRef, useState } from "react";
 
 import FullscreenButton from "./controls/FullscreenButton";
 import Zoom from "./features/zoom/Zoom";
@@ -9,9 +9,7 @@ import ToolbarManager from "./features/toolbar/ToolbarManager";
 import PageWorkspace from "./features/pages/PageWorkspace";
 import useEditorController from "./features/editor/controller/useEditorController";
 
-import useAppearance from "./features/appearance/useAppearance";
-import type { AppearanceTarget } from "./features/appearance/appearance.types";
-import type { ColorStyle, LayoutStyle, TypographyStyle,} from "./features/appearance/appearance.types";
+import useFolioAppearance from "./features/appearance/useFolioAppearance";
 
 
 export default function Folio() {
@@ -33,127 +31,10 @@ export default function Folio() {
 
     const editor = useEditorController(activePage?.id ?? null);
 
-    const {
-        getAppearance,
-        updateColors,
-        updateTypography,
-        updateLayout,
-    } = useAppearance();
-
-    // Apparence de l'espace de travail général.
-    const folioAppearance = getAppearance({
-        type: "folio",
+    const appearance = useFolioAppearance({
+        activePage,
+        editor,
     });
-
-    // Apparence de la feuille actuellement affichée.
-    const sheetAppearance = activePage
-        ? getAppearance({
-              type: "sheet",
-              id: activePage.id,
-          })
-        : null;
-
-    const pageNavigationAppearance = getAppearance({
-        type: "element",
-        scope: "page-navigation",
-        id: "main-navigation",
-    });
-
-    const colorToolbarAppearance = getAppearance({
-        type: "element",
-        scope: "floating-toolbar",
-        id: "couleurs",
-    });
-
-    const typographyToolbarAppearance = getAppearance({
-        type: "element",
-        scope: "floating-toolbar",
-        id: "typographie",
-    });
-
-    const layoutToolbarAppearance = getAppearance({
-        type: "element",
-        scope: "floating-toolbar",
-        id: "disposition",
-    });
-
-    /**
-     * Détermine la cible des toolbars.
-     *
-     * En mode édition : la Sheet active.
-     * En mode personnalisation : l'élément sélectionné,
-     * dans la limite des cibles actuellement prises en charge.
-     */
-    const appearanceTarget: AppearanceTarget | null = (() => {
-        if (editor.mode === "edit") {
-            return activePage
-                ? { type: "sheet", id: activePage.id }
-                : null;
-        }
-
-        if (editor.selection?.scope === "folio") {
-            return { type: "folio" };
-        }
-
-        if (editor.selection?.scope === "sheet") {
-            return { type: "sheet", id: editor.selection.id };
-        }
-
-        if ( editor.selection?.scope === "page-navigation" || editor.selection?.scope === "floating-toolbar") {
-            return {
-                type: "element",
-                scope: editor.selection.scope,
-                id: editor.selection.id,
-            };
-        }
-
-        return null;
-    })();
-
-    const targetAppearance = appearanceTarget ? getAppearance(appearanceTarget) : null;
-
-    // Callbacks transmis aux toolbars.
-    const handleColorsChange = useCallback(
-        (colors: ColorStyle) => {
-            if (!appearanceTarget) return;
-
-            updateColors(appearanceTarget, colors);
-        },
-        [appearanceTarget, updateColors]
-    );
-
-    const handleTypographyChange = useCallback(
-        (typography: TypographyStyle) => {
-            if (!appearanceTarget) return;
-
-            updateTypography(appearanceTarget, typography);
-        },
-        [appearanceTarget, updateTypography]
-    );
-
-    const handleLayoutChange = useCallback(
-        (layout: LayoutStyle) => {
-            if (!appearanceTarget) return;
-
-            updateLayout(appearanceTarget, layout);
-        },
-        [appearanceTarget, updateLayout]
-    );
-
-    // Style de l'espace de travail.
-    const background = folioAppearance.colors.background;
-
-    const backgroundStyle: React.CSSProperties =
-        background.type === "image" && background.image
-            ? {
-                backgroundColor: background.color,
-                backgroundImage: `url(${background.image})`,
-                backgroundSize: background.size,
-                backgroundRepeat: background.size === "repeat" ? "repeat" : "no-repeat",
-            }
-            : {
-                backgroundColor: background.color,
-            };
 
     return (
         <div 
@@ -162,9 +43,9 @@ export default function Folio() {
             data-selection-id="folio-root"
             data-selection-type="container"
             style={{
-                ...backgroundStyle,
-                color: folioAppearance.colors.color,
-                fontFamily: folioAppearance.typography.fontFamily
+                ...appearance.backgroundStyle,
+                color: appearance.folio.colors.color,
+                fontFamily: appearance.folio.typography.fontFamily
             }}
             className="min-h-0 flex-1 overflow-auto flex flex-col items-center justify-start gap-4 p-4"
             onPointerDown={(event) => {
@@ -183,9 +64,6 @@ export default function Folio() {
                 );
 
                 if (!selectionTarget) return;
-                
-                console.log("Selection target:", selectionTarget);
-                console.log("Clicked element:", clickedElement);
 
                 // Ne pas sélectionner le Folio lorsqu'on clique
                 // sur un enfant qui ne possède pas ses propres attributs.
@@ -229,21 +107,21 @@ export default function Folio() {
 
             <ToolbarManager     
                 controlsContainer={controlsContainer} 
-                colorsAppearance={colorToolbarAppearance}
-                typographyAppearance={typographyToolbarAppearance}
-                layoutAppearance={layoutToolbarAppearance}
-                onColorsChange={handleColorsChange}
-                onTypographyChange={handleTypographyChange}
-                onLayoutChange={handleLayoutChange}
+                colorsAppearance={appearance.colorToolbar}
+                typographyAppearance={appearance.typographyToolbar}
+                layoutAppearance={appearance.layoutToolbar}
+                onColorsChange={appearance.updateColors}
+                onTypographyChange={appearance.updateTypography}
+                onLayoutChange={appearance.updateLayout}
             />
 
             <div className="my-auto flex flex-col items-center gap-4 shrink-0">
-                {activePage && sheetAppearance && (
+                {activePage && appearance.sheet && (
                     <PageWorkspace
                         key={activePage.id}
                         page={activePage}
-                        sheetAppearance={sheetAppearance}
-                        navigationAppearance={pageNavigationAppearance}
+                        sheetAppearance={appearance.sheet}
+                        navigationAppearance={appearance.pageNavigation}
                         isCustomizing={editor.isCustomizing}
                         zoom={zoom}
                         currentPage={activePageIndex}
