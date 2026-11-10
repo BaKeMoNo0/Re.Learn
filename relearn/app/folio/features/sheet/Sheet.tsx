@@ -63,7 +63,7 @@ export default function Sheet({ pageId, format, zoom, appearance, content, previ
                 }}
                 className="box-border absolute top-0 left-0
                        overflow-hidden border border-dashed
-                       border-[#a7a78a] shadow-sm"
+                        shadow-sm"
             >
                 <textarea
                     value={content}

@@ -53,6 +53,30 @@ export default function Folio() {
           })
         : null;
 
+    const pageNavigationAppearance = getAppearance({
+        type: "element",
+        scope: "page-navigation",
+        id: "main-navigation",
+    });
+
+    const colorToolbarAppearance = getAppearance({
+        type: "element",
+        scope: "floating-toolbar",
+        id: "couleurs",
+    });
+
+    const typographyToolbarAppearance = getAppearance({
+        type: "element",
+        scope: "floating-toolbar",
+        id: "typographie",
+    });
+
+    const layoutToolbarAppearance = getAppearance({
+        type: "element",
+        scope: "floating-toolbar",
+        id: "disposition",
+    });
+
     /**
      * Détermine la cible des toolbars.
      *
@@ -75,12 +99,18 @@ export default function Folio() {
             return { type: "sheet", id: editor.selection.id };
         }
 
+        if ( editor.selection?.scope === "page-navigation" || editor.selection?.scope === "floating-toolbar") {
+            return {
+                type: "element",
+                scope: editor.selection.scope,
+                id: editor.selection.id,
+            };
+        }
+
         return null;
     })();
 
-    const targetAppearance = appearanceTarget
-        ? getAppearance(appearanceTarget)
-        : null;
+    const targetAppearance = appearanceTarget ? getAppearance(appearanceTarget) : null;
 
     // Callbacks transmis aux toolbars.
     const handleColorsChange = useCallback(
@@ -130,7 +160,7 @@ export default function Folio() {
             ref={containerRef}
             data-selection-scope="folio"
             data-selection-id="folio-root"
-            data-selection-type="shape"
+            data-selection-type="container"
             style={{
                 ...backgroundStyle,
                 color: folioAppearance.colors.color,
@@ -145,48 +175,76 @@ export default function Folio() {
                     return;
                 }
 
-                const target = (event.target as HTMLElement).closest(
+                const clickedElement = event.target as HTMLElement;
+                if (clickedElement.closest("[data-selection-ignore]")) { return;}
+                
+                const selectionTarget = clickedElement.closest(
                     "[data-selection-scope][data-selection-id][data-selection-type]"
                 );
 
-                if (!target) return;
+                if (!selectionTarget) return;
+                
+                console.log("Selection target:", selectionTarget);
+                console.log("Clicked element:", clickedElement);
 
-                const scope = target.getAttribute("data-selection-scope");
-                const id = target.getAttribute("data-selection-id");
-                const type = target.getAttribute("data-selection-type");
+                // Ne pas sélectionner le Folio lorsqu'on clique
+                // sur un enfant qui ne possède pas ses propres attributs.
+                if (selectionTarget === containerRef.current && clickedElement !== containerRef.current) { return;}
+
+                const scope = selectionTarget.getAttribute("data-selection-scope");
+                const id = selectionTarget.getAttribute("data-selection-id");
+                const type = selectionTarget.getAttribute("data-selection-type");
 
                 if (!id || !scope || !type) return;
 
+                const validScopes = [
+                    "folio",
+                    "sheet",
+                    "floating-toolbar",
+                    "page-navigation",
+                ] as const;
+
+                const validTypes = [
+                    "button",
+                    "text",
+                    "shape",
+                    "container",
+                ] as const;
+
                 if (
-                    scope === "folio" ||
-                    scope === "sheet" ||
-                    scope === "floating-toolbar" ||
-                    scope === "page-navigation"
+                    !validScopes.includes(scope as typeof validScopes[number]) ||
+                    !validTypes.includes(type as typeof validTypes[number])
                 ) {
-                    editor.selectElement(
-                        id,
-                        type as "button" | "text" | "shape",
-                        scope
-                    );
+                    return;
                 }
+
+                editor.selectElement(
+                    id,
+                    type as typeof validTypes[number],
+                    scope as typeof validScopes[number]
+                );
             }}
         >
             <Zoom zoom={zoom} onZoomChange={setZoom} />
 
-            <ToolbarManager 
+            <ToolbarManager     
                 controlsContainer={controlsContainer} 
-                appearance={targetAppearance}
+                colorsAppearance={colorToolbarAppearance}
+                typographyAppearance={typographyToolbarAppearance}
+                layoutAppearance={layoutToolbarAppearance}
                 onColorsChange={handleColorsChange}
                 onTypographyChange={handleTypographyChange}
                 onLayoutChange={handleLayoutChange}
             />
 
-            <div className="my-auto flex w-full flex-col items-center gap-4 shrink-0">
+            <div className="my-auto flex flex-col items-center gap-4 shrink-0">
                 {activePage && sheetAppearance && (
                     <PageWorkspace
                         key={activePage.id}
                         page={activePage}
-                        appearance={sheetAppearance}
+                        sheetAppearance={sheetAppearance}
+                        navigationAppearance={pageNavigationAppearance}
+                        isCustomizing={editor.isCustomizing}
                         zoom={zoom}
                         currentPage={activePageIndex}
                         totalPages={pages.length}

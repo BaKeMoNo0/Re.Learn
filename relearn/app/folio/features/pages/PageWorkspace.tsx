@@ -9,7 +9,9 @@ import type { Appearance } from "../appearance/appearance.types";
 type PageWorkspaceProps = {
     page: Page;
     zoom: number;
-    appearance: Appearance;
+    sheetAppearance: Appearance;
+    navigationAppearance: Appearance;
+    isCustomizing: boolean;
     currentPage: number;
     totalPages: number;
     onPrevious: () => void;
@@ -21,13 +23,15 @@ type PageWorkspaceProps = {
 export default function PageWorkspace({ 
     page,
     zoom,
-    appearance,
+    sheetAppearance,
+    navigationAppearance,
+    isCustomizing,
     currentPage,
     totalPages,
     onPrevious,
     onNext,
     onCreate,
-    onPageChange, 
+    onPageChange,
 }: PageWorkspaceProps) {
 
     const editor = useSheetEditor({
@@ -43,7 +47,7 @@ export default function PageWorkspace({
                 pageId={page.id}
                 editor={editor}
                 zoom={zoom}
-                appearance={appearance}
+                appearance={sheetAppearance}
             />
 
             <PageNavigation
@@ -54,6 +58,8 @@ export default function PageWorkspace({
                 onCreate={onCreate}
                 format={editor.format}
                 onFormatChange={editor.requestFormatChange}
+                isCustomizing={isCustomizing}
+                appearance={navigationAppearance}
             />
         </div>
     );

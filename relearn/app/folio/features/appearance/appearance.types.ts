@@ -48,8 +48,12 @@ export type Appearance = {
  */
 export type AppearanceTarget =
     | { type: "folio"; }
-    | { type: "sheet"; id: string;};
-    //| { type: "element"; id: string; scope: SelectionScope;};
+    | { type: "sheet"; id: string;}
+    | { 
+        type: "element"; 
+        scope: SelectionScope;
+        id: string; 
+    };
 
 
 /**
@@ -58,5 +62,5 @@ export type AppearanceTarget =
 export type AppearanceStore = {
     folio: Appearance;
     sheets: Record<string, Appearance>;
-    //elements: Record<string, Appearance>;
+    elements: Record<string, Appearance>;
 };

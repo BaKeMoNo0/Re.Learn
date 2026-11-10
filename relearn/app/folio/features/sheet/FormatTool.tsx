@@ -3,15 +3,18 @@
 
 import { useState } from "react";
 import { formats, SheetFormat } from "./formats";
+import { Appearance } from "../appearance/appearance.types";
 
 type FormatProps = {
     format: SheetFormat;
     onFormatChange: (format: SheetFormat) => void;
+    appearance: Appearance;
 };
 
 export default function Format({
     format,
     onFormatChange,
+    appearance,
 }: FormatProps) {
     const [isFormatMenuOpen, setIsFormatMenuOpen] = useState(false);
 
@@ -23,8 +26,11 @@ export default function Format({
                 aria-label={`Format du document : ${format}`}
                 aria-expanded={isFormatMenuOpen}
                 onClick={() => setIsFormatMenuOpen(!isFormatMenuOpen)}
+                style={{
+                    borderColor: appearance.colors.borderColor,
+                }}
                 className="flex h-11 min-w-11 items-center justify-center 
-                           gap-1 border border-[#d8d9b8] rounded-full px-3 text-sm 
+                           gap-1 border rounded-full px-3
                            transition-colors hover:bg-[#d8d9b8]"
             >
                 {format}

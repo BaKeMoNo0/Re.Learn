@@ -2,7 +2,8 @@
 export type ElementType =
     | "button"
     | "text"
-    | "shape";
+    | "shape"
+    | "container";
 
 
 export type SelectionScope =

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import FormatTool from "../sheet/FormatTool";
 import type { SheetFormat } from "../sheet/formats";
+import { Appearance } from "../appearance/appearance.types";
 
 type Props = {
     currentPage: number;
@@ -12,6 +13,8 @@ type Props = {
     onCreate: () => void;
     format: SheetFormat;
     onFormatChange: (format: SheetFormat) => void;
+    isCustomizing: boolean;
+    appearance: Appearance;
 };
 
 export default function PageNavigation({
@@ -22,9 +25,13 @@ export default function PageNavigation({
     onCreate,
     format,
     onFormatChange,
+    isCustomizing,
+    appearance,
 }: Props) {
 
     useEffect(() => {
+        if (isCustomizing) return;
+
         function handleKeyDown(event: KeyboardEvent) {
             // Ne pas naviguer pendant la saisie de texte.
             const target = event.target;
@@ -55,13 +62,30 @@ export default function PageNavigation({
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [onPrevious, onNext]);
+    }, [onPrevious, onNext, isCustomizing]);
 
     
     return (
         <div 
             data-selection-scope="page-navigation"
             data-selection-id="main-navigation"
+            data-selection-type="container"
+            style={{
+                color: appearance.colors.color,
+                backgroundColor: appearance.colors.background.color,
+                borderColor: appearance.colors.borderColor,
+                fontFamily: appearance.typography.fontFamily,
+                fontSize: appearance.typography.fontSize,
+                fontWeight: appearance.typography.fontWeight,
+                borderRadius: appearance.layout.borderRadius,
+                padding: appearance.layout.padding,
+            }}
+            onClickCapture={(event) => {
+                if (isCustomizing) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }}
             className="flex w-full max-w-99.25 items-center justify-between px-2"
         >
             <button
@@ -75,21 +99,25 @@ export default function PageNavigation({
                 ←
             </button>
 
-            <span className="whitespace-nowrap text-xs">
+            <span className="whitespace-nowrap">
                 Page {currentPage + 1} / {totalPages}
             </span>
 
             <FormatTool
                 format={format}
                 onFormatChange={onFormatChange}
+                appearance={appearance}
             />
 
             <button
                 type="button"
                 onClick={onCreate}
+                style={{
+                    borderColor: appearance.colors.borderColor,
+                }}
                 className="flex items-center gap-2 whitespace-nowrap rounded-full
-                           border border-[#d8d9b8] px-3 py-2
-                           text-sm transition hover:bg-[#d8d9b8]"
+                           border px-3 py-2
+                           transition hover:bg-[#d8d9b8]"
             >
                 <span aria-hidden="true">+</span>
                 Nouvelle page

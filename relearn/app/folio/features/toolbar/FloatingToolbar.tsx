@@ -3,10 +3,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent, ReactNode } from "react";
+import { Appearance } from "../appearance/appearance.types";
 
 type Side = "left" | "right";
 
 type Props = {
+    appearance: Appearance;
     children: ReactNode;
     icon: string;
     label: string;
@@ -24,6 +26,7 @@ type Position = {
 const BUTTON_SIZE = 44;
 
 export default function FloatingToolbar({
+    appearance,
     children,
     icon,
     label,
@@ -101,6 +104,7 @@ export default function FloatingToolbar({
         <div
             data-selection-scope="floating-toolbar"
             data-selection-id={label.toLowerCase()}
+            data-selection-type="container"
             className="fixed"
             style={{
                 zIndex: isOpen ? 50 : 40,
@@ -110,11 +114,18 @@ export default function FloatingToolbar({
                 transform: `translate(${position.x}px, 0)`,
                 visibility: visible ? "visible" : "hidden",
                 pointerEvents: visible ? "auto" : "none",
+
+                color: appearance.colors.color,
+                borderColor: appearance.colors.borderColor,
+                fontFamily: appearance.typography.fontFamily,
+                fontSize: appearance.typography.fontSize,
+                fontWeight: appearance.typography.fontWeight,
+                borderRadius: appearance.layout.borderRadius,
             }}
         >
             <div
                 className={[
-                    "flex items-start gap-2 transition-transform duration-300 ease-out",
+                    "flex items-start gap-2 transition-transform duration-300 ease-out bg-none",
                     isRight ? "flex-row" : "flex-row-reverse",
                 ].join(" ")}
                 style={{
@@ -126,17 +137,24 @@ export default function FloatingToolbar({
                 }}
             >
                 <button
+                    data-selection-ignore
                     type="button"
                     aria-label={`Ouvrir la barre : ${label}`}
                     aria-expanded={isOpen}
                     title={label}
                     onClick={handleToggle}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#d5d5b5] bg-[#ffffe3] text-xl shadow-lg hover:bg-[#eeeed7]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#d5d5b5] text-xl shadow-lg hover:bg-[#eeeed7]"
                 >
                     {icon}
                 </button>
 
-                <div className="flex min-w-0 items-start gap-2 rounded-2xl border border-[#d5d5b5] bg-[#ffffe3] p-2 shadow-lg">
+                <div 
+                    style={{
+                        backgroundColor: appearance.colors.background.color,
+                        borderColor: appearance.colors.borderColor,
+                    }}
+                    className="flex min-w-0 items-start gap-2 rounded-2xl border border-[#d5d5b5] bg-[#ffffe3] p-2 shadow-lg"
+                >
                     {isRight && (
                         <>  
                             <button
@@ -151,13 +169,17 @@ export default function FloatingToolbar({
                             >
                                 ⠿
                             </button>
-                            {children}
+                            <div data-selection-ignore>
+                                {children}
+                            </div>
                         </>
                     )}
                     
                     {!isRight && (
                         <>
-                            {children}
+                            <div data-selection-ignore>
+                                {children}
+                            </div>
                             <button
                                 type="button"
                                 aria-label={`Déplacer ${label}`}

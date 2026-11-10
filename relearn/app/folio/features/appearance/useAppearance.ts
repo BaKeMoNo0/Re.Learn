@@ -17,6 +17,7 @@ export default function useAppearance() {
     const [store, setStore] = useState<AppearanceStore>({
         folio: defaultAppearance,
         sheets: {},
+        elements: {},
     });
 
     /**
@@ -31,7 +32,13 @@ export default function useAppearance() {
                 return store.folio;
             }
 
-            return store.sheets[target.id] ?? defaultAppearance;
+            if (target.type === "sheet") {
+                return store.sheets[target.id] ?? defaultAppearance;
+            }
+
+            const key = `${target.scope}:${target.id}`;
+
+            return store.elements[key] ?? defaultAppearance;
         },
         [store]
     );
@@ -46,24 +53,44 @@ export default function useAppearance() {
             updater: (appearance: Appearance) => Appearance
         ) => {
             setStore((currentStore) => {
-                const currentAppearance =
-                    target.type === "folio"
-                        ? currentStore.folio
-                        : currentStore.sheets[target.id] ?? defaultAppearance;
-
-                const updatedAppearance = updater(currentAppearance);
 
                 if (target.type === "folio") {
                     return {
                         ...currentStore,
-                        folio: updatedAppearance,
+                        folio: updater(currentStore.folio),
                     };
                 }
 
+                if (target.type === "sheet") {
+                    const currentAppearance =
+                        currentStore.sheets[target.id] ?? defaultAppearance;
+
+                    return {
+                        ...currentStore,
+                        sheets: {
+                            ...currentStore.sheets,
+                            [target.id]: updater(currentAppearance),
+                        },
+                    };
+                }
+
+                const key = `${target.scope}:${target.id}`;
+                const currentAppearance = currentStore.elements[key] ?? defaultAppearance;
+
                 return {
                     ...currentStore,
-                    sheets: {
-                        ...currentStore.sheets,
+                    elements: {
+                        ...currentStore.elements,
+                        [key]: updater(currentAppearance),
+                    },
+                };
+            });
+        },
+        []
+    );
+
+    /**
+     * Met à jour les couleurs d'une cible.
                         [target.id]: updatedAppearance,
                     },
                 };
